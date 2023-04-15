@@ -1,4 +1,4 @@
-type Vote @model @auth(rules: [{allow: owner}, {allow: public, operations: [read]}, {allow: private}]) {
+type Vote @model @auth(rules: [{allow: owner}]) {
   id: ID!
   themeID: ID! @index(name: "byTheme")
   value: Int
