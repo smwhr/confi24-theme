@@ -1,5 +1,5 @@
 
-import { Amplify } from 'aws-amplify';
+import { Amplify, Hub } from 'aws-amplify';
 import { withAuthenticator } from '@aws-amplify/ui-react';
 
 import { useQuery } from 'react-query'
@@ -13,11 +13,16 @@ import { DataStore } from '@aws-amplify/datastore';
 import { Theme, Vote } from './models';
 import { useEffect, useState } from 'react';
 
-Amplify.configure(awsconfig);
+Amplify.configure({...awsconfig, "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS"});
 type ThemeWithVote = Theme & {vote?: Vote, voteCount?: number};
 
-function App({ signOut, user }:{signOut?:any, user?:any}) {
+Hub.listen('auth', async (data) => {
+  if (data.payload.event === 'signOut') {
+    await DataStore.clear();
+  }
+});
 
+function App({ signOut, user }:{signOut?:any, user?:any}) {
 
   const [themes, setThemes] = useState<Theme[]>([])
   const [votes, setVotes] = useState<Vote[]>([])
@@ -31,6 +36,7 @@ function App({ signOut, user }:{signOut?:any, user?:any}) {
 
   const { isLoading: votesLoading, error: votesError } = useQuery<any, QueryError, Vote[]>("votes", async () =>{
     const models = await DataStore.query(Vote);
+    // const models = DataStore.query(Vote, (v) => v.userID.eq(user!.username));
     console.log(models)
     return models;
   }, {onSuccess: setVotes})
