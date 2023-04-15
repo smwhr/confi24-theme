@@ -38,7 +38,7 @@ function App({ signOut, user }:{signOut?:any, user?:any}) {
   }, {onSuccess: setVotes})
 
   const mergeThemesWithVote = themes.map( t => {
-    const vote = votes.findLast(v => v.themeID == t.id)
+    const vote = votes.find(v => v.themeID == t.id)
     return {...t, vote: vote}
   })
 

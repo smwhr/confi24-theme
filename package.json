@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^4.6.0",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.2",
     "aws-amplify": "^5.0.25",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
