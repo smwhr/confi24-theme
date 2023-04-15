@@ -13,5 +13,10 @@ export default defineConfig({
     // By default, Vite doesn't include shims for NodeJS/
     // necessary for segment analytics lib to work
     global: {},
+    resolve: {
+        alias: {
+          './runtimeConfig': './runtimeConfig.browser',
+        }
+    }
   },
 })
