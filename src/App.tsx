@@ -123,7 +123,6 @@ function App({ signOut, user }:{signOut?:any, user?:any}) {
             <tr>
               <td><strong>Thème</strong></td>
               <td><strong>Votre vote</strong></td>
-              <td><strong>Total</strong></td>
             </tr>
           </thead>
           <tbody>
@@ -134,9 +133,6 @@ function App({ signOut, user }:{signOut?:any, user?:any}) {
                     <button className={t.vote?.value === -1 ? "selected" : ""} onClick={voteFor(t, -1)}>-1</button>
                     <button className={t.vote?.value === 0 ? "selected" : ""} onClick={voteFor(t, 0)}>0</button>
                     <button className={t.vote?.value === +1 ? "selected" : ""} onClick={voteFor(t, +1)}>+1</button>
-                  </td>
-                  <td>
-                    {t.voteCount !== undefined ? t.voteCount : <button onClick={revealVoteCount(t)}>reveal</button>}
                   </td>
               </tr>
             })}
