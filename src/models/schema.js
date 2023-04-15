@@ -10,13 +10,6 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "value": {
-                    "name": "value",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "themeID": {
                     "name": "themeID",
                     "isArray": false,
@@ -24,11 +17,11 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "userID": {
-                    "name": "userID",
+                "value": {
+                    "name": "value",
                     "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
+                    "type": "Int",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "createdAt": {
@@ -78,26 +71,6 @@ export const schema = {
                                     "update",
                                     "delete",
                                     "read"
-                                ]
-                            },
-                            {
-                                "allow": "private",
-                                "operations": [
-                                    "create"
-                                ]
-                            },
-                            {
-                                "groupClaim": "cognito:groups",
-                                "provider": "userPools",
-                                "allow": "groups",
-                                "groups": [
-                                    "Admin"
-                                ],
-                                "operations": [
-                                    "read",
-                                    "create",
-                                    "update",
-                                    "delete"
                                 ]
                             }
                         ]
@@ -181,5 +154,5 @@ export const schema = {
     "enums": {},
     "nonModels": {},
     "codegenVersion": "3.4.0",
-    "version": "c6bd81b7f288c795644a35b36be95cb5"
+    "version": "96a18f68417efa195dfaeafe946a115e"
 };

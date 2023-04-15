@@ -14,8 +14,8 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Your verification code",
-    "emailVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Votre code de vÃ©rification Concours FI 2024",
+    "emailVerificationMessage": "Le code de vÃ©rification pour accÃ©der au site du Concours de Fiction Interactive 2024 est le suivant : {####}\n\nBonne journÃ©e !",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
@@ -37,7 +37,7 @@
     "usernameAttributes": [
       "email"
     ],
-    "useDefault": "default",
+    "useDefault": "manual",
     "userPoolGroups": false,
     "userPoolGroupList": [],
     "adminQueries": false,
@@ -58,6 +58,7 @@
     "breakCircularDependency": true,
     "dependsOn": [],
     "hostedUI": false,
-    "authProviders": []
+    "authProviders": [],
+    "thirdPartyAuth": false
   }
 }

@@ -9,14 +9,12 @@ import './App.css'
 
 import awsconfig from './aws-exports';
 
-Amplify.configure(awsconfig);
-
-
 import { DataStore } from '@aws-amplify/datastore';
 import { Theme, Vote } from './models';
 import { useEffect, useState } from 'react';
 
-type ThemeWithVote = Theme & {vote?: Vote};
+Amplify.configure(awsconfig);
+type ThemeWithVote = Theme & {vote?: Vote, voteCount?: number};
 
 function App({ signOut, user }:{signOut?:any, user?:any}) {
 
@@ -32,17 +30,19 @@ function App({ signOut, user }:{signOut?:any, user?:any}) {
   }, {onSuccess: setThemes})
 
   const { isLoading: votesLoading, error: votesError } = useQuery<any, QueryError, Vote[]>("votes", () =>{
-    const models = DataStore.query(Vote, (v) => v.userID.eq(user!.username));
+    const models = DataStore.query(Vote);
     console.log(models);
     return models;
   }, {onSuccess: setVotes})
 
-  const mergeThemesWithVote = themes.map( t => {
-    const vote = votes.find(v => v.themeID == t.id)
-    return {...t, vote: vote}
-  })
+  
 
   useEffect(() => {
+    const mergeThemesWithVote = themes.map( t => {
+      const vote = votes.find(v => v.themeID === t.id)
+      return {...t, vote: vote}
+    })
+
     setThemesWithVote(mergeThemesWithVote)
   }, [themes, votes])
 
@@ -54,16 +54,6 @@ function App({ signOut, user }:{signOut?:any, user?:any}) {
     return <div>chargement de vos votes...</div>
   }
 
-  /*
-  
-  */
-
-  console.log(user)
-  console.log(themes)
-  console.log(votes)
-
-  
-
   const voteFor = (theme: ThemeWithVote, value:number) => async () => {
     
     let newVote: Vote;
@@ -74,9 +64,9 @@ function App({ signOut, user }:{signOut?:any, user?:any}) {
         })
       );
     }else{
-      const ballot = { "value": value,
+      const ballot = { 
+        "value": value,
         "themeID": theme.id,
-        "userID": user!.username
       }
       newVote = await DataStore.save(
         new Vote(ballot)
@@ -84,7 +74,7 @@ function App({ signOut, user }:{signOut?:any, user?:any}) {
     }
     
     const newThemesWithVote = themesWithVote.map( t => {
-      if(t == theme){
+      if(t === theme){
         return {...t, vote: newVote}
       }else{
         return t;
@@ -92,6 +82,24 @@ function App({ signOut, user }:{signOut?:any, user?:any}) {
     })
     setThemesWithVote(newThemesWithVote)
     
+  }
+
+  const revealVoteCount = (theme: ThemeWithVote) => async () => {
+
+    const actualTheme = themes.find(t => t.id === theme.id)
+    const votes =  await actualTheme!.Votes
+    console.log(votes)
+    console.log(theme)
+    const voteCount = await votes.toArray().then(vs => vs.length)
+    
+    const newThemesWithVote = themesWithVote.map( t => {
+      if(t === theme){
+        return {...t, voteCount: voteCount}
+      }else{
+        return t;
+      }
+    })
+    setThemesWithVote(newThemesWithVote)
   }
 
   return (
@@ -104,12 +112,12 @@ function App({ signOut, user }:{signOut?:any, user?:any}) {
       </p>
 
       <div>
-        <table style={{"width": "100%"}}>
+        <table style={{"maxWidth": "450px", "margin": "0 auto"}}>
           <thead>
             <tr>
               <td><strong>Thème</strong></td>
-              <td>&nbsp;</td>
               <td><strong>Votre vote</strong></td>
+              <td><strong>Total</strong></td>
             </tr>
           </thead>
           <tbody>
@@ -117,11 +125,13 @@ function App({ signOut, user }:{signOut?:any, user?:any}) {
               return <tr key={t.id}>
                   <td>{t.name}</td>
                   <td>
-                    <button onClick={voteFor(t, -1)}>-1</button>
-                    <button onClick={voteFor(t, 0)}>0</button>
-                    <button onClick={voteFor(t, +1)}>+1</button>
+                    <button className={t.vote?.value === -1 ? "selected" : ""} onClick={voteFor(t, -1)}>-1</button>
+                    <button className={t.vote?.value === 0 ? "selected" : ""} onClick={voteFor(t, 0)}>0</button>
+                    <button className={t.vote?.value === +1 ? "selected" : ""} onClick={voteFor(t, +1)}>+1</button>
                   </td>
-                  <td>{t.vote ? t.vote.value : <em>pas encore de vote</em>}</td>
+                  <td>
+                    {t.voteCount !== undefined ? t.voteCount : <button onClick={revealVoteCount(t)}>reveal</button>}
+                  </td>
               </tr>
             })}
           </tbody>

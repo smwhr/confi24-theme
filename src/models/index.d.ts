@@ -12,9 +12,8 @@ type EagerVote = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly value?: number | null;
   readonly themeID: string;
-  readonly userID: string;
+  readonly value?: number | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -25,9 +24,8 @@ type LazyVote = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly value?: number | null;
   readonly themeID: string;
-  readonly userID: string;
+  readonly value?: number | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
