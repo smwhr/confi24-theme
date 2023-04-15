@@ -8,5 +8,6 @@
       "authconfi24theme",
       "Outputs.UserPoolId"
     ]
-  }
+  },
+  "CreateAPIKey": 1
 }

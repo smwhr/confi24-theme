@@ -24,14 +24,14 @@ function App({ signOut, user }:{signOut?:any, user?:any}) {
   const [themesWithVote, setThemesWithVote] = useState<ThemeWithVote[]>([])
 
   const { isLoading: themesLoading, error: themesError } = useQuery<any, QueryError, Theme[]>("themes", () =>{
+    console.log("user", user)
     const models = DataStore.query(Theme);
-    console.log(models);
     return models;
   }, {onSuccess: setThemes})
 
-  const { isLoading: votesLoading, error: votesError } = useQuery<any, QueryError, Vote[]>("votes", () =>{
-    const models = DataStore.query(Vote);
-    console.log(models);
+  const { isLoading: votesLoading, error: votesError } = useQuery<any, QueryError, Vote[]>("votes", async () =>{
+    const models = await DataStore.query(Vote);
+    console.log(models)
     return models;
   }, {onSuccess: setVotes})
 
