@@ -5,6 +5,12 @@
   text-align: center;
 }
 
+@media only screen and (max-width: 600px) {
+  #root {
+    font-size: 0.8rem;
+  }
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
