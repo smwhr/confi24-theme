@@ -22,26 +22,38 @@ Hub.listen('auth', async (data) => {
   }
 });
 
+const useHub = (action: () => void) => Hub.listen("datastore", async hubData => {
+  const  { event, data } = hubData.payload;
+  if (event === "ready") {
+    // do something here once the data is synced from the cloud
+    action()
+  }
+})
+
 function App({ signOut, user }:{signOut?:any, user?:any}) {
 
+  const [ready, setReady] = useState<boolean>(false)
   const [themes, setThemes] = useState<Theme[]>([])
   const [votes, setVotes] = useState<Vote[]>([])
   const [themesWithVote, setThemesWithVote] = useState<ThemeWithVote[]>([])
 
-  const { isLoading: themesLoading, error: themesError } = useQuery<any, QueryError, Theme[]>("themes", () =>{
-    console.log("user", user)
-    const models = DataStore.query(Theme);
-    return models;
-  }, {onSuccess: setThemes})
-
-  const { isLoading: votesLoading, error: votesError } = useQuery<any, QueryError, Vote[]>("votes", async () =>{
-    const models = await DataStore.query(Vote);
-    // const models = DataStore.query(Vote, (v) => v.userID.eq(user!.username));
-    console.log(models)
-    return models;
-  }, {onSuccess: setVotes})
 
   
+  const { isLoading: themesLoading, error: themesError } = useQuery<any, QueryError, Theme[]>(
+    `themes${ready}`, 
+    async () =>{
+      const models = await DataStore.query(Theme);
+      return models;
+    }, {onSuccess: setThemes})
+
+  const { isLoading: votesLoading, error: votesError } = useQuery<any, QueryError, Vote[]>(
+    `votes${ready}`, 
+    async () =>{
+      const models = await DataStore.query(Vote);
+      return models;
+    }, {onSuccess: setVotes})
+  
+  useHub(() => setReady(true))
 
   useEffect(() => {
     const mergeThemesWithVote = themes.map( t => {
@@ -94,8 +106,6 @@ function App({ signOut, user }:{signOut?:any, user?:any}) {
 
     const actualTheme = themes.find(t => t.id === theme.id)
     const votes =  await actualTheme!.Votes
-    console.log(votes)
-    console.log(theme)
     const voteCount = await votes.toArray().then(vs => vs.length)
     
     const newThemesWithVote = themesWithVote.map( t => {
