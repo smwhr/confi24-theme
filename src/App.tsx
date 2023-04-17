@@ -1,6 +1,6 @@
 
-import { Amplify, Hub } from 'aws-amplify';
-import { withAuthenticator } from '@aws-amplify/ui-react';
+import { Amplify, Hub,  I18n } from 'aws-amplify';
+import { withAuthenticator, translations } from '@aws-amplify/ui-react';
 
 import { useQuery } from 'react-query'
 
@@ -21,6 +21,22 @@ Hub.listen('auth', async (data) => {
     await DataStore.clear();
   }
 });
+
+
+I18n.putVocabularies(translations);
+I18n.setLanguage('fr');
+I18n.putVocabularies({
+  fr: {
+    'Sign In': 'Se connecter',
+    'Sign Up': "S'inscrire",
+    'Enter your Email': 'Votre email',
+    'Enter your Password': 'Votre mot de passe',
+    'Please confirm your Password': 'Confirmation du mot de passe',
+    'Preferred Username': 'Pseudo',
+    'Enter your Preferred Username': 'Votre pseudo'
+  }
+});
+
 
 const useHub = (action: () => void) => Hub.listen("datastore", async hubData => {
   const  { event, data } = hubData.payload;
@@ -121,7 +137,7 @@ function App({ signOut, user }:{signOut?:any, user?:any}) {
   return (
     <>
       <p style={{"fontSize": "2em"}}>Vote pour le thème du Concours de fiction interactive francophone 2024</p>
-      <p>Bonjour {user.attributes.preferred_username} <button onClick={signOut}>Sign out</button></p>
+      <p>Bonjour {user.attributes.preferred_username} <button onClick={signOut}>Se déconnecter</button></p>
       
       <p>
 
