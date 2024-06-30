@@ -136,7 +136,7 @@ function App({ signOut, user }:{signOut?:any, user?:any}) {
 
   return (
     <>
-      <p style={{"fontSize": "2em"}}>Vote pour le thème du Concours de fiction interactive francophone 2024</p>
+      <p style={{"fontSize": "2em"}}>Vote pour le thème du Concours de fiction interactive francophone 2025</p>
       <p>Bonjour {user.attributes.preferred_username} <button onClick={signOut}>Se déconnecter</button></p>
       
       <p>
